@@ -32,6 +32,7 @@ services:
       - "1935:1935" # RTMP (optional)
       - "8888:8888" # HLS (optional)
       - "8554:8554" # RTSP (optional)
+      - "9997:9997" # API
 
   client:
     build:

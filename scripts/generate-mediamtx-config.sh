@@ -7,6 +7,9 @@ OUTPUT="mediamtx/config.yml"
 mkdir -p mediamtx
 
 cat > "$OUTPUT" <<EOF
+api: yes
+apiAddress: :9997
+
 webrtc: yes
 webrtcAddress: :8889
 webrtcICEHostNAT1To1IPs:
@@ -24,6 +27,7 @@ authInternalUsers:
     permissions:
       - action: publish
         path: ${MEDIAMTX_PUBLISH_PATH}
+      - action: api
   - user: any
     pass:
     ips: []
