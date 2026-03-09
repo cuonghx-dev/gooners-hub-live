@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AuthModule } from './auth/auth.module';
 import { ChatModule } from './chat/chat.module';
+import { LiveModule } from './live/live.module';
 import { ChatMessage } from './chat/chat-message.entity';
 
 @Module({
@@ -18,6 +19,7 @@ import { ChatMessage } from './chat/chat-message.entity';
     ScheduleModule.forRoot(),
     AuthModule,
     ChatModule,
+    LiveModule,
   ],
 })
 export class AppModule {}

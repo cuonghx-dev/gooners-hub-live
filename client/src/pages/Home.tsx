@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useWhep } from "@/hooks/useWhep";
+import { useStreamAlive } from "@/hooks/useStreamAlive";
+import { useViewerCount } from "@/hooks/useViewerCount";
 import { ChatSidebar } from "@/components/ChatSidebar";
 import arsenalLogo from "@/assets/arsenal-fc-logo.png";
 import {
@@ -12,6 +14,8 @@ import {
   Trophy,
   MessageCircle,
   Radio,
+  RefreshCw,
+  Eye,
 } from "lucide-react";
 
 function CtrlBtn({
@@ -41,6 +45,7 @@ function CtrlBtn({
 
 export default function Home() {
   const { videoRef, status, error, connect, disconnect } = useWhep();
+  const { alive: streamAlive, refresh: refreshStream } = useStreamAlive();
   const playerRef = useRef<HTMLDivElement>(null);
   const progressFillRef = useRef<HTMLDivElement>(null);
   const progRef = useRef(0);
@@ -51,6 +56,7 @@ export default function Home() {
   const [chatOpen, setChatOpen] = useState(true);
 
   const isLive = status === "live";
+  const viewerCount = useViewerCount(isLive);
   const isConnecting = status === "connecting";
   const isError = status === "error";
 
@@ -145,6 +151,11 @@ export default function Home() {
                 <Trophy className="w-3.5 h-3.5 shrink-0" />
                 Premier League
               </div>
+              {/* Viewer count */}
+              <div className="flex items-center gap-1.5 bg-surface border border-wire rounded-full px-3 py-1 text-[#888] text-[11.5px] font-bold whitespace-nowrap">
+                <Eye className="w-3.5 h-3.5 shrink-0" />
+                {viewerCount}
+              </div>
               {/* Chat toggle */}
               <button
                 onClick={() => setChatOpen((v) => !v)}
@@ -201,13 +212,10 @@ export default function Home() {
                         Retry
                       </button>
                     </>
-                  ) : (
+                  ) : streamAlive ? (
                     <>
                       <p className="text-[14px] text-[#555] font-semibold mb-1">
-                        Stream not active
-                      </p>
-                      <p className="text-[11px] text-[#333] mb-3">
-                        Kick-off · Emirates Stadium · 21:00
+                        Stream ready
                       </p>
                       <button
                         onClick={() => {
@@ -217,6 +225,22 @@ export default function Home() {
                         className="text-[12px] bg-brand/15 border border-brand/30 text-brand px-4 py-1.5 rounded hover:bg-brand hover:text-white transition-colors cursor-pointer"
                       >
                         ▶ Play
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-[14px] text-[#555] font-semibold mb-1">
+                        Stream not active
+                      </p>
+                      <p className="text-[11px] text-[#333] mb-3">
+                        Waiting for broadcast to start…
+                      </p>
+                      <button
+                        onClick={refreshStream}
+                        className="text-[12px] bg-white/5 border border-white/10 text-[#555] px-4 py-1.5 rounded hover:text-white hover:border-white/20 transition-colors cursor-pointer flex items-center gap-1.5 mx-auto"
+                      >
+                        <RefreshCw className="w-3 h-3" />
+                        Refresh
                       </button>
                     </>
                   )}
