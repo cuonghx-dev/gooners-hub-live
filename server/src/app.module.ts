@@ -5,6 +5,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { AuthModule } from './auth/auth.module';
 import { ChatModule } from './chat/chat.module';
 import { LiveModule } from './live/live.module';
+import { FootballModule } from './football/football.module';
 import { ChatMessage } from './chat/chat-message.entity';
 
 @Module({
@@ -20,6 +21,7 @@ import { ChatMessage } from './chat/chat-message.entity';
     AuthModule,
     ChatModule,
     LiveModule,
+    FootballModule,
   ],
 })
 export class AppModule {}

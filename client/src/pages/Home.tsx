@@ -45,7 +45,7 @@ function CtrlBtn({
 
 export default function Home() {
   const { videoRef, status, error, connect, disconnect } = useWhep();
-  const { alive: streamAlive, refresh: refreshStream } = useStreamAlive();
+  const { alive: streamAlive, refresh: refreshStream, loading: streamLoading } = useStreamAlive();
   const playerRef = useRef<HTMLDivElement>(null);
   const progressFillRef = useRef<HTMLDivElement>(null);
   const progRef = useRef(0);
@@ -236,11 +236,12 @@ export default function Home() {
                         Waiting for broadcast to start…
                       </p>
                       <button
-                        onClick={refreshStream}
-                        className="text-[12px] bg-white/5 border border-white/10 text-[#555] px-4 py-1.5 rounded hover:text-white hover:border-white/20 transition-colors cursor-pointer flex items-center gap-1.5 mx-auto"
+                        onClick={() => refreshStream()}
+                        disabled={streamLoading}
+                        className="text-[12px] bg-white/5 border border-white/10 text-[#555] px-4 py-1.5 rounded hover:text-white hover:border-white/20 transition-colors cursor-pointer flex items-center gap-1.5 mx-auto disabled:opacity-50"
                       >
-                        <RefreshCw className="w-3 h-3" />
-                        Refresh
+                        <RefreshCw className={`w-3 h-3 ${streamLoading ? "animate-spin" : ""}`} />
+                        {streamLoading ? "Checking…" : "Refresh"}
                       </button>
                     </>
                   )}

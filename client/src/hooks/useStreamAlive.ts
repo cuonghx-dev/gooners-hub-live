@@ -1,19 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL as string;
 
 export function useStreamAlive() {
-  const [alive, setAlive] = useState<boolean | null>(null);
+  const { data, refetch, isFetching } = useQuery({
+    queryKey: ['streamAlive'],
+    queryFn: () =>
+      fetch(`${SERVER_URL}/live/stream`)
+        .then((r) => r.json())
+        .then((d: { streamAlive: boolean }) => d.streamAlive),
+    enabled: true,
+    refetchOnWindowFocus: false,
+  });
 
-  const check = () =>
-    fetch(`${SERVER_URL}/live/stream`)
-      .then((r) => r.json())
-      .then((d: { streamAlive: boolean }) => setAlive(d.streamAlive))
-      .catch(() => setAlive(null));
-
-  useEffect(() => {
-    check();
-  }, []);
-
-  return { alive, refresh: check };
+  return { alive: data ?? null, refresh: refetch, loading: isFetching };
 }
